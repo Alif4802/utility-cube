@@ -37,21 +37,14 @@ export const CurrencyConverter = () => {
   const [toCurrency, setToCurrency] = useState("EUR");
   const { toast } = useToast();
 
-  const { data: rates, isLoading } = useQuery({
+  const { data: rates, isLoading, error } = useQuery({
     queryKey: ['currency-rates'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('currency_rates')
         .select('*');
       
-      if (error) {
-        toast({
-          title: "Error fetching rates",
-          description: error.message,
-          variant: "destructive",
-        });
-        return {};
-      }
+      if (error) throw error;
       
       // Convert array to object for easier lookup
       return data.reduce((acc: Record<string, Record<string, number>>, curr) => {
@@ -61,6 +54,13 @@ export const CurrencyConverter = () => {
         acc[curr.base_currency][curr.target_currency] = curr.rate;
         return acc;
       }, {});
+    },
+    onError: (error) => {
+      toast({
+        title: "Error fetching rates",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
     }
   });
 
@@ -74,25 +74,23 @@ export const CurrencyConverter = () => {
       if (fromCurrency === toCurrency) return value.toFixed(2);
       
       const rate = rates[fromCurrency]?.[toCurrency];
-      if (!rate) {
-        toast({
-          title: "Conversion not available",
-          description: "This currency pair is not supported yet.",
-          variant: "destructive",
-        });
-        return "";
-      }
+      if (!rate) return "";
       
       return (value * rate).toFixed(2);
     } catch (error) {
-      toast({
-        title: "Conversion Error",
-        description: "An error occurred during conversion.",
-        variant: "destructive",
-      });
       return "";
     }
   };
+
+  if (error) {
+    return (
+      <Card className="utility-card max-w-2xl mx-auto animate-fade-in">
+        <div className="text-center text-red-500">
+          Failed to load currency rates. Please try again later.
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="utility-card max-w-2xl mx-auto animate-fade-in">
