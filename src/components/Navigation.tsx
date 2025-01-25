@@ -10,13 +10,13 @@ export const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-b z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex-shrink-0">
+          <NavLink to="/" className="flex-shrink-0">
             <h1 className="text-xl font-bold text-gradient-primary">MultiUtils</h1>
-          </div>
+          </NavLink>
           <div className="flex items-center space-x-4">
             <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               <Ruler className="w-4 h-4" />
-              <span>Converter</span>
+              <span>Home</span>
             </NavLink>
             <NavLink to="/calculator" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               <Calculator className="w-4 h-4" />
