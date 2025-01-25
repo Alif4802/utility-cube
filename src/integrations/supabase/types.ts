@@ -9,7 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      currency_rates: {
+        Row: {
+          base_currency: string
+          id: string
+          last_updated: string | null
+          rate: number
+          target_currency: string
+        }
+        Insert: {
+          base_currency: string
+          id?: string
+          last_updated?: string | null
+          rate: number
+          target_currency: string
+        }
+        Update: {
+          base_currency?: string
+          id?: string
+          last_updated?: string | null
+          rate?: number
+          target_currency?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
