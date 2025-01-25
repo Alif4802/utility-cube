@@ -55,12 +55,14 @@ export const CurrencyConverter = () => {
         return acc;
       }, {});
     },
-    onError: (error) => {
-      toast({
-        title: "Error fetching rates",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
+    meta: {
+      onError: (error: Error) => {
+        toast({
+          title: "Error fetching rates",
+          description: error.message || "An error occurred",
+          variant: "destructive",
+        });
+      }
     }
   });
 
