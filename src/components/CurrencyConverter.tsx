@@ -28,7 +28,7 @@ const currencies = {
 };
 
 export const CurrencyConverter = () => {
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<string>("");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
   const { toast } = useToast();
