@@ -36,76 +36,92 @@ const temperatureUnits = [
   { value: "k", label: "Kelvin" }
 ];
 
+const conversionFactors = {
+  length: {
+    m: 1,
+    km: 0.001,
+    cm: 100,
+    mm: 1000,
+    in: 39.3701,
+    ft: 3.28084,
+    yd: 1.09361,
+    mi: 0.000621371
+  },
+  weight: {
+    kg: 1,
+    g: 1000,
+    mg: 1000000,
+    lb: 2.20462,
+    oz: 35.274
+  }
+};
+
 export const UnitConverter = () => {
   const [value, setValue] = useState("");
   const [fromUnit, setFromUnit] = useState("m");
   const [toUnit, setToUnit] = useState("km");
+  const [activeTab, setActiveTab] = useState("length");
 
   const convert = (value: string, from: string, to: string, type: string) => {
     const val = parseFloat(value);
     if (isNaN(val)) return "";
 
-    let result = 0;
-    
-    if (type === "length") {
-      // Convert to meters first
-      let meters = val;
-      switch (from) {
-        case "km": meters = val * 1000; break;
-        case "cm": meters = val / 100; break;
-        case "mm": meters = val / 1000; break;
-        case "in": meters = val * 0.0254; break;
-        case "ft": meters = val * 0.3048; break;
-        case "yd": meters = val * 0.9144; break;
-        case "mi": meters = val * 1609.34; break;
-      }
-      
-      // Convert from meters to target unit
-      switch (to) {
-        case "km": result = meters / 1000; break;
-        case "cm": result = meters * 100; break;
-        case "mm": result = meters * 1000; break;
-        case "in": result = meters / 0.0254; break;
-        case "ft": result = meters / 0.3048; break;
-        case "yd": result = meters / 0.9144; break;
-        case "mi": result = meters / 1609.34; break;
-        default: result = meters;
-      }
-    } else if (type === "weight") {
-      // Convert to grams first
-      let grams = val;
-      switch (from) {
-        case "kg": grams = val * 1000; break;
-        case "mg": grams = val / 1000; break;
-        case "lb": grams = val * 453.592; break;
-        case "oz": grams = val * 28.3495; break;
-      }
-      
-      // Convert from grams to target unit
-      switch (to) {
-        case "kg": result = grams / 1000; break;
-        case "mg": result = grams * 1000; break;
-        case "lb": result = grams / 453.592; break;
-        case "oz": result = grams / 28.3495; break;
-        default: result = grams;
-      }
-    } else if (type === "temperature") {
-      if (from === "c") {
-        if (to === "f") result = (val * 9/5) + 32;
-        else if (to === "k") result = val + 273.15;
-        else result = val;
-      } else if (from === "f") {
-        if (to === "c") result = (val - 32) * 5/9;
-        else if (to === "k") result = (val - 32) * 5/9 + 273.15;
-        else result = val;
-      } else if (from === "k") {
-        if (to === "c") result = val - 273.15;
-        else if (to === "f") result = (val - 273.15) * 9/5 + 32;
-        else result = val;
-      }
+    if (type === "temperature") {
+      return convertTemperature(val, from, to);
     }
 
-    return result.toFixed(4);
+    const factors = conversionFactors[type as keyof typeof conversionFactors];
+    if (!factors) return "";
+
+    // Convert to base unit first (meters for length, kg for weight)
+    const baseValue = type === "length" ? 
+      val / factors[from as keyof typeof factors] :
+      val / factors[from as keyof typeof factors];
+
+    // Convert from base unit to target unit
+    const result = type === "length" ? 
+      baseValue * factors[to as keyof typeof factors] :
+      baseValue * factors[to as keyof typeof factors];
+
+    return result.toFixed(6);
+  };
+
+  const convertTemperature = (value: number, from: string, to: string) => {
+    let celsius = value;
+    
+    // Convert input to Celsius first
+    if (from === "f") {
+      celsius = (value - 32) * (5/9);
+    } else if (from === "k") {
+      celsius = value - 273.15;
+    }
+
+    // Convert Celsius to target unit
+    if (to === "c") return celsius.toFixed(2);
+    if (to === "f") return ((celsius * 9/5) + 32).toFixed(2);
+    if (to === "k") return (celsius + 273.15).toFixed(2);
+    
+    return "";
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Reset units based on selected tab
+    switch (value) {
+      case "length":
+        setFromUnit("m");
+        setToUnit("km");
+        break;
+      case "weight":
+        setFromUnit("kg");
+        setToUnit("g");
+        break;
+      case "temperature":
+        setFromUnit("c");
+        setToUnit("f");
+        break;
+    }
+    setValue("");
   };
 
   const ConverterForm = ({ units, type }: { units: typeof lengthUnits, type: string }) => (
@@ -172,7 +188,7 @@ export const UnitConverter = () => {
   return (
     <Card className="utility-card max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gradient">Unit Converter</h2>
-      <Tabs defaultValue="length" className="w-full">
+      <Tabs defaultValue="length" className="w-full" onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-3 mb-6">
           <TabsTrigger value="length">Length</TabsTrigger>
           <TabsTrigger value="weight">Weight</TabsTrigger>

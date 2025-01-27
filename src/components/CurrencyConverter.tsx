@@ -40,13 +40,20 @@ export const CurrencyConverter = () => {
         .from('currency_rates')
         .select('*');
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching rates:", error);
+        throw error;
+      }
       
+      if (!data || data.length === 0) {
+        throw new Error("No exchange rates available");
+      }
+
       return data.reduce((acc: Record<string, Record<string, number>>, curr) => {
         if (!acc[curr.base_currency]) {
           acc[curr.base_currency] = {};
         }
-        acc[curr.base_currency][curr.target_currency] = curr.rate;
+        acc[curr.base_currency][curr.target_currency] = parseFloat(curr.rate);
         return acc;
       }, {});
     },
@@ -69,10 +76,23 @@ export const CurrencyConverter = () => {
 
     if (fromCurrency === toCurrency) return value.toFixed(2);
     
-    const rate = rates[fromCurrency]?.[toCurrency];
-    if (!rate) return "";
+    // Direct conversion if rate exists
+    if (rates[fromCurrency]?.[toCurrency]) {
+      return (value * rates[fromCurrency][toCurrency]).toFixed(2);
+    }
     
-    return (value * rate).toFixed(2);
+    // Try reverse conversion
+    if (rates[toCurrency]?.[fromCurrency]) {
+      return (value * (1 / rates[toCurrency][fromCurrency])).toFixed(2);
+    }
+    
+    // Try conversion through USD as base currency
+    if (rates["USD"]?.[fromCurrency] && rates["USD"]?.[toCurrency]) {
+      const valueInUSD = value * (1 / rates["USD"][fromCurrency]);
+      return (valueInUSD * rates["USD"][toCurrency]).toFixed(2);
+    }
+
+    return "";
   };
 
   return (
