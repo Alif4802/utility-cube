@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 const currencies = {
-  // Major World Currencies
   USD: "US Dollar",
   EUR: "Euro",
   GBP: "British Pound",
@@ -15,20 +14,10 @@ const currencies = {
   CHF: "Swiss Franc",
   AUD: "Australian Dollar",
   CAD: "Canadian Dollar",
-  
-  // Asian Currencies
   CNY: "Chinese Yuan",
   HKD: "Hong Kong Dollar",
   SGD: "Singapore Dollar",
-  INR: "Indian Rupee",
-  IDR: "Indonesian Rupiah",
-  MYR: "Malaysian Ringgit",
-  PHP: "Philippine Peso",
-  THB: "Thai Baht",
-  VND: "Vietnamese Dong",
-  KRW: "South Korean Won",
-  PKR: "Pakistani Rupee",
-  BDT: "Bangladeshi Taka"
+  INR: "Indian Rupee"
 };
 
 export const CurrencyConverter = () => {
@@ -37,7 +26,7 @@ export const CurrencyConverter = () => {
   const [toCurrency, setToCurrency] = useState("EUR");
   const { toast } = useToast();
 
-  const { data: rates, isLoading, error } = useQuery({
+  const { data: rates, isLoading } = useQuery({
     queryKey: ['currency-rates'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -46,7 +35,6 @@ export const CurrencyConverter = () => {
       
       if (error) throw error;
       
-      // Convert array to object for easier lookup
       return data.reduce((acc: Record<string, Record<string, number>>, curr) => {
         if (!acc[curr.base_currency]) {
           acc[curr.base_currency] = {};
@@ -72,30 +60,16 @@ export const CurrencyConverter = () => {
     const value = parseFloat(amount);
     if (isNaN(value)) return "";
 
-    try {
-      if (fromCurrency === toCurrency) return value.toFixed(2);
-      
-      const rate = rates[fromCurrency]?.[toCurrency];
-      if (!rate) return "";
-      
-      return (value * rate).toFixed(2);
-    } catch (error) {
-      return "";
-    }
+    if (fromCurrency === toCurrency) return value.toFixed(2);
+    
+    const rate = rates[fromCurrency]?.[toCurrency];
+    if (!rate) return "";
+    
+    return (value * rate).toFixed(2);
   };
 
-  if (error) {
-    return (
-      <Card className="utility-card max-w-2xl mx-auto animate-fade-in">
-        <div className="text-center text-red-500">
-          Failed to load currency rates. Please try again later.
-        </div>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="utility-card max-w-2xl mx-auto animate-fade-in">
+    <Card className="utility-card max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gradient">Currency Converter</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-4">
