@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 const currencies = {
   USD: "US Dollar",
@@ -81,16 +88,24 @@ export const CurrencyConverter = () => {
             className="input-field"
             placeholder="Enter amount"
           />
-          <Select
-            value={fromCurrency}
-            onValueChange={setFromCurrency}
-          >
-            {Object.entries(currencies).map(([code, name]) => (
-              <option key={code} value={code}>
-                {code} - {name}
-              </option>
-            ))}
-          </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full">
+                {fromCurrency} - {currencies[fromCurrency as keyof typeof currencies]}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="max-h-[300px] overflow-y-auto">
+              {Object.entries(currencies).map(([code, name]) => (
+                <DropdownMenuItem
+                  key={code}
+                  onClick={() => setFromCurrency(code)}
+                >
+                  {code} - {name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className="space-y-4">
           <label className="block text-sm font-medium text-muted-foreground">To</label>
@@ -101,16 +116,24 @@ export const CurrencyConverter = () => {
             className="input-field"
             placeholder="Converted amount"
           />
-          <Select
-            value={toCurrency}
-            onValueChange={setToCurrency}
-          >
-            {Object.entries(currencies).map(([code, name]) => (
-              <option key={code} value={code}>
-                {code} - {name}
-              </option>
-            ))}
-          </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full">
+                {toCurrency} - {currencies[toCurrency as keyof typeof currencies]}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="max-h-[300px] overflow-y-auto">
+              {Object.entries(currencies).map(([code, name]) => (
+                <DropdownMenuItem
+                  key={code}
+                  onClick={() => setToCurrency(code)}
+                >
+                  {code} - {name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       {isLoading && (

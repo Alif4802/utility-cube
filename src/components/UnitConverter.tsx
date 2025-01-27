@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 const lengthUnits = [
   { value: "m", label: "Meters" },
@@ -112,16 +119,24 @@ export const UnitConverter = () => {
           className="input-field"
           placeholder="Enter value"
         />
-        <Select
-          value={fromUnit}
-          onValueChange={setFromUnit}
-        >
-          {units.map((unit) => (
-            <option key={unit.value} value={unit.value}>
-              {unit.label}
-            </option>
-          ))}
-        </Select>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-full">
+              {units.find(u => u.value === fromUnit)?.label || units[0].label}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {units.map((unit) => (
+              <DropdownMenuItem
+                key={unit.value}
+                onClick={() => setFromUnit(unit.value)}
+              >
+                {unit.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="space-y-4">
         <label className="block text-sm font-medium text-muted-foreground">To</label>
@@ -132,16 +147,24 @@ export const UnitConverter = () => {
           className="input-field"
           placeholder="Result"
         />
-        <Select
-          value={toUnit}
-          onValueChange={setToUnit}
-        >
-          {units.map((unit) => (
-            <option key={unit.value} value={unit.value}>
-              {unit.label}
-            </option>
-          ))}
-        </Select>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-full">
+              {units.find(u => u.value === toUnit)?.label || units[0].label}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {units.map((unit) => (
+              <DropdownMenuItem
+                key={unit.value}
+                onClick={() => setToUnit(unit.value)}
+              >
+                {unit.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
