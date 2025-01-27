@@ -102,7 +102,7 @@ export const CurrencyConverter = () => {
         <div className="space-y-4">
           <label className="block text-sm font-medium text-muted-foreground">From</label>
           <Input
-            type="number"
+            type="text"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="input-field"
