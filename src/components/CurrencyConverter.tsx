@@ -95,6 +95,14 @@ export const CurrencyConverter = () => {
     return "";
   };
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only numbers and up to 12 digits (9 zeros after decimal)
+    if (/^\d*\.?\d{0,9}$/.test(value) || value === '') {
+      setAmount(value);
+    }
+  };
+
   return (
     <Card className="utility-card max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gradient">Currency Converter</h2>
@@ -104,7 +112,7 @@ export const CurrencyConverter = () => {
           <Input
             type="text"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={handleAmountChange}
             className="input-field"
             placeholder="Enter amount"
           />
