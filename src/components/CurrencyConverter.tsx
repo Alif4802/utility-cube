@@ -68,7 +68,7 @@ export const CurrencyConverter = () => {
     }
   });
 
-  const convertCurrency = (amount: string) => {
+  const convertCurrency = (amount: string): string => {
     if (!amount || !rates) return "";
     
     const value = parseFloat(amount);
