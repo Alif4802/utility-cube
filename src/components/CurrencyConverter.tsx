@@ -53,7 +53,7 @@ export const CurrencyConverter = () => {
         if (!acc[curr.base_currency]) {
           acc[curr.base_currency] = {};
         }
-        acc[curr.base_currency][curr.target_currency] = curr.rate;
+        acc[curr.base_currency][curr.target_currency] = Number(curr.rate);
         return acc;
       }, {});
     },
