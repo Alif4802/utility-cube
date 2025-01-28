@@ -68,10 +68,10 @@ export const CurrencyConverter = () => {
     }
   });
 
-  const convertCurrency = (amount: string): string => {
-    if (!amount || !rates) return "";
+  const convertCurrency = (inputAmount: string): string => {
+    if (!inputAmount || !rates) return "";
     
-    const value = parseFloat(amount);
+    const value = parseFloat(inputAmount);
     if (isNaN(value)) return "";
 
     if (fromCurrency === toCurrency) return value.toFixed(2);

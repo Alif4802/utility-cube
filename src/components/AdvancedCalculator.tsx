@@ -18,6 +18,14 @@ export const AdvancedCalculator = () => {
     sqrt: Math.sqrt,
     pow2: (x: number) => Math.pow(x, 2),
     pow3: (x: number) => Math.pow(x, 3),
+    exp: Math.exp,
+    abs: Math.abs,
+    floor: Math.floor,
+    ceil: Math.ceil,
+    round: Math.round,
+    sinh: Math.sinh,
+    cosh: Math.cosh,
+    tanh: Math.tanh
   };
 
   const handleNumber = (num: string) => {
@@ -63,7 +71,15 @@ export const AdvancedCalculator = () => {
         .replace(/tan/g, "Math.tan")
         .replace(/log/g, "Math.log10")
         .replace(/ln/g, "Math.log")
-        .replace(/sqrt/g, "Math.sqrt");
+        .replace(/sqrt/g, "Math.sqrt")
+        .replace(/exp/g, "Math.exp")
+        .replace(/abs/g, "Math.abs")
+        .replace(/floor/g, "Math.floor")
+        .replace(/ceil/g, "Math.ceil")
+        .replace(/round/g, "Math.round")
+        .replace(/sinh/g, "Math.sinh")
+        .replace(/cosh/g, "Math.cosh")
+        .replace(/tanh/g, "Math.tanh");
 
       const result = eval(sanitizedExpression);
       setDisplay(result.toString());
@@ -105,7 +121,7 @@ export const AdvancedCalculator = () => {
               key={func}
               variant="secondary"
               onClick={() => handleFunction(func)}
-              className="h-10"
+              className="h-10 text-sm"
             >
               {func}
             </Button>
