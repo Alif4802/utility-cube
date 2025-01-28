@@ -49,6 +49,8 @@ export const CurrencyConverter = () => {
         throw new Error("No exchange rates available");
       }
 
+      console.log("Fetched rates:", data); // Debug log
+
       return data.reduce((acc: Record<string, Record<string, number>>, curr) => {
         if (!acc[curr.base_currency]) {
           acc[curr.base_currency] = {};
@@ -69,37 +71,53 @@ export const CurrencyConverter = () => {
   });
 
   const convertCurrency = (inputAmount: string): string => {
-    if (!inputAmount || !rates) return "";
+    if (!inputAmount || !rates) {
+      console.log("No input amount or rates"); // Debug log
+      return "";
+    }
     
     const value = parseFloat(inputAmount);
-    if (isNaN(value)) return "";
+    if (isNaN(value)) {
+      console.log("Invalid number"); // Debug log
+      return "";
+    }
 
     if (fromCurrency === toCurrency) return value.toFixed(2);
     
-    // Direct conversion if rate exists
+    console.log("Converting from", fromCurrency, "to", toCurrency); // Debug log
+    console.log("Available rates:", rates); // Debug log
+    
+    // Direct conversion
     if (rates[fromCurrency]?.[toCurrency]) {
-      return (value * rates[fromCurrency][toCurrency]).toFixed(2);
+      const result = value * rates[fromCurrency][toCurrency];
+      console.log("Direct conversion result:", result); // Debug log
+      return result.toFixed(2);
     }
     
-    // Try reverse conversion
+    // Reverse conversion
     if (rates[toCurrency]?.[fromCurrency]) {
-      return (value * (1 / rates[toCurrency][fromCurrency])).toFixed(2);
+      const result = value * (1 / rates[toCurrency][fromCurrency]);
+      console.log("Reverse conversion result:", result); // Debug log
+      return result.toFixed(2);
     }
     
-    // Try conversion through USD as base currency
+    // USD base conversion
     if (rates["USD"]?.[fromCurrency] && rates["USD"]?.[toCurrency]) {
       const valueInUSD = value * (1 / rates["USD"][fromCurrency]);
-      return (valueInUSD * rates["USD"][toCurrency]).toFixed(2);
+      const result = valueInUSD * rates["USD"][toCurrency];
+      console.log("USD base conversion result:", result); // Debug log
+      return result.toFixed(2);
     }
 
+    console.log("No conversion path found"); // Debug log
     return "";
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Allow only numbers and up to 12 digits (9 zeros after decimal)
     if (/^\d*\.?\d{0,9}$/.test(value) || value === '') {
       setAmount(value);
+      console.log("Amount changed to:", value); // Debug log
     }
   };
 
