@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -62,6 +62,16 @@ export const CurrencyConverter = () => {
     }
   });
 
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Error fetching rates",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
+
   const convertCurrency = (inputAmount: string): string => {
     if (!inputAmount || !rates) {
       return "";
@@ -101,14 +111,6 @@ export const CurrencyConverter = () => {
       setAmount(value);
     }
   };
-
-  if (error) {
-    toast({
-      title: "Error fetching rates",
-      description: error.message,
-      variant: "destructive",
-    });
-  }
 
   return (
     <Card className="utility-card max-w-2xl mx-auto">
