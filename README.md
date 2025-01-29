@@ -1,39 +1,57 @@
-# Fitness Tracker App  
+# 🔮 Multi-Utility Cube
 
-## 🚀 Project Overview  
-This project is a customized version of [Lovable.dev's Fitness Tracker Template](https://lovable.dev/projects/422a7819-a607-44b3-ac4e-c02f23fda904) with significant enhancements for improved functionality and user experience.
+
+A Swiss Army knife web app featuring **currency conversion**, **unit converters**, **calculator**, and **text editor** in one sleek interface.
+---
+
+## ✨ Features
+
+### 1. 💱 Currency Converter
+- Real-time exchange rates via [ExchangeRate-API](https://www.exchangerate-api.com/)
+- Supports 150+ global currencies
+- Historical rate comparison (last 30 days)
+
+### 2. 📐 Unit Converters
+- **Length**: inches ↔ cm ↔ meters ↔ miles
+- **Weight**: grams ↔ ounces ↔ pounds ↔ kg
+- **Temperature**: °C ↔ °F ↔ Kelvin
+- **Digital Storage**: KB ↔ MB ↔ GB ↔ TB
+- **Cooking**: cups ↔ tablespoons ↔ milliliters
+
+### 3. 🧮 Smart Calculator
+- Basic arithmetic operations
+- Scientific functions (sin, cos, log)
+- Memory storage (M+, M-, MR)
+- Responsive keypad layout
+
+### 4. 📝 Text Editor
+- Rich text formatting (bold, italic, lists)
+- Word/character counter
+- Export to .txt/.md
+- Dark/Light mode toggle
 
 ---
 
-## ✨ Customizations & Enhancements  
-**Here’s what I added/improved**:  
-- ✅ **AI Meal Planner**: Integrated OpenAI API to generate personalized meal plans.  
-- ✅ **Wearable Sync**: Added Fitbit API integration for real-time activity tracking.  
-- ✅ **Social Features**: Built a friend challenge system with live leaderboards.  
-- ✅ **UI Overhaul**: Redesigned dashboard with D3.js analytics and dark mode toggle.  
-- ✅ **Performance**: Reduced initial load time by 40% via code splitting.  
+## 🛠️ Tech Stack
+
+- **Frontend**: React + TypeScript + Vite  
+- **Styling**: Tailwind CSS + Heroicons  
+- **Currency API**: ExchangeRate-API  
+- **Text Editor**: Slate.js  
+- **Unit Conversion**: mathjs  
+- **State Management**: Zustand  
 
 ---
 
-## 🛠️ Tech Stack  
-- Frontend: Vite + React + TypeScript  
-- UI: shadcn-ui + Tailwind CSS  
-- Backend: Node.js + Express (added custom API endpoints)  
-- Database: Supabase (migrated from template's Firebase)  
+## 🚀 Installation
 
----
+```bash
+# Clone repository
+git clone https://github.com/yourusername/multi-utility-cube.git
+cd multi-utility-cube
 
-## 🚨 Original Template Credits  
-This project started with [Lovable.dev's Fitness Tracker Template](https://lovable.dev/projects/422a7819-a607-44b3-ac4e-c02f23fda904). Major changes include:  
-- Removed original calorie counter → Added USDA FoodData Central API integration  
-- Replaced basic charts → Custom D3.js visualizations  
-- Added 15+ new workout types and exercise animations  
+# Install dependencies
+npm install  # or yarn install
 
----
-
-## 📥 Installation  
-```sh
-git clone https://github.com/your-username/fitness-tracker.git
-cd fitness-tracker
-npm install
-npm run dev
+# Start development server
+npm run dev  # or yarn dev
