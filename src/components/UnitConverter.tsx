@@ -127,14 +127,19 @@ export const UnitConverter = () => {
   const ConverterForm = ({ units, type }: { units: typeof lengthUnits, type: string }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-4">
-        <label className="block text-sm font-medium text-muted-foreground">From</label>
+        <label htmlFor={`unit-from-${type}`} className="block text-sm font-medium text-muted-foreground">From</label>
         <Input
+          id={`unit-from-${type}`}
           type="number"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className="input-field"
           placeholder="Enter value"
+          aria-invalid={value !== '' && isNaN(Number(value))}
         />
+        {value !== '' && isNaN(Number(value)) && (
+          <p className="text-xs text-destructive mt-1">Please enter a valid number.</p>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-full">
@@ -155,13 +160,15 @@ export const UnitConverter = () => {
         </DropdownMenu>
       </div>
       <div className="space-y-4">
-        <label className="block text-sm font-medium text-muted-foreground">To</label>
+        <label htmlFor={`unit-to-${type}`} className="block text-sm font-medium text-muted-foreground">To</label>
         <Input
+          id={`unit-to-${type}`}
           type="text"
           value={convert(value, fromUnit, toUnit, type)}
           readOnly
           className="input-field"
           placeholder="Result"
+          aria-readonly
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
